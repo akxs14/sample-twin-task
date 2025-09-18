@@ -8,19 +8,19 @@
 
 `tiny-agent-graph` lets you define structured, multi-step workflows in simple YAML like this:
 
-```yaml
-id: catalog_sync
-nodes:
-  - id: login
-    kind: http_login
 
-  - id: fetch_catalog
-    kind: http_get
-    depends_on: [login]
+	id: catalog_sync
+	nodes:
+	  - id: login
+	    kind: http_login
 
-  - id: validate
-    kind: schema_check
-    depends_on: [fetch_catalog]
+	  - id: fetch_catalog
+	    kind: http_get
+	    depends_on: [login]
+
+	  - id: validate
+	    kind: schema_check
+	    depends_on: [fetch_catalog]
 
 
 It then:
