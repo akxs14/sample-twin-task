@@ -1,100 +1,84 @@
-# 🧠 Tiny Agent Graph – A Durable DAG Runner for Agents
+# 🧠 tiny-agent-graph – Candidate Assignment
 
-Welcome! 👋  
-This is a small Rust project that explores how to **run agent workflows as typed, durable graphs**—exactly the kind of thing you’d need when your agents start doing real-world operations like fetching invoices, checking catalogs, or syncing data between systems.
+Hello, friend.
 
----
+This repo contains the skeleton of a tiny workflow engine — one that reads YAML, builds a graph, and executes steps in order. Think of it as a "makefile for agents" — but cleaner..
 
-## 💡 The Problem
-
-Many agent-based systems (like the ones Twin Labs is building) don’t just run a single function—they execute **multi-step flows**:  
-`Login → Fetch → Parse → Verify → Store`
-
-These steps often depend on each other, might need to **retry** if something fails (like a flaky API), and must be **idempotent** so we don’t accidentally upload the same invoice twice. Sometimes we even want to **undo** things if a flow fails halfway—think "saga" patterns or compensation hooks.
-
-We also want to schedule flows in the future:  
-“Run this invoice fetch every morning at 04:00, and retry it 3 times if it fails.”
-
-This project tackles both sides of that puzzle:
-- A **tiny graph engine** that runs flows described in YAML, persists step state, retries on failure, and supports compensation steps.
-- A **durable timer + resumer**, so we can schedule agent tasks with at-least-once guarantees (even across crashes).
+The provided solution should be submitted as a piece of work you intend to hand over to your future colleagues. It should be on the level of quality you would feel proud about and exhibits your professionalism.
 
 ---
 
-## 🎯 What This Project Does
+## 🎯 Your Mission
 
-- Loads YAML-based flows into a typed **DAG** (via `petgraph`)
-- Runs them step-by-step with:
-  - **Idempotency keys** to avoid duplicate effects
-  - **Retry policies** (with backoff/jitter)
-  - **Compensation hooks** for safe rollback
-- Stores all runs, step statuses, and outputs in a local **SQLite** database
-- Provides a basic **cron-style scheduler**:
-  - You can `schedule()` a task for later
-  - A background loop wakes it up and runs it
-  - Survives restarts and avoids double execution
+Your task is to build a **minimal, testable execution engine** that takes a YAML flow like this:
 
----
+```yaml
+id: my-cool-flow
+nodes:
+  - id: a
+    kind: noop
 
-## 🤖 Example Use Case
+  - id: b
+    kind: noop
+    depends_on: [a]
 
-Let’s say we want to:
-1. Log into an API
-2. Fetch a list of invoices
-3. Parse them
-4. Validate that each invoice is from this month
-5. Store the data into a database
+  - id: c
+    kind: noop
+    depends_on: [b]
+```
 
-You describe that as a YAML flow (see `flows/quick_catalog_check.yml`), and this runner will:
-- Build a DAG
-- Resolve dependencies
-- Enforce retries + idempotency
-- Record exactly what happened, with timestamps and result logs
+…and does the following:
 
-You can even schedule this to run every day at 04:00 using `schedule(task, when)`.
+🛠️ Parses it into a typed structure
 
----
+📈 Builds a directed acyclic graph (DAG)
 
-## 🔧 Why This Exists
+🔄 Executes each step in topological order
 
-Twin Labs mentions **graph-based agents**, **secure automation**, **vertical operators**, and **high-reliability infra**. That means you care about:
-- Clear state machines
-- Durable scheduling
-- Idempotent side effects
-- Debuggable run history
-- Being able to sleep at night 🛏️
+🧱 Respects depends_on
 
-This project shows a minimal—but production-minded—approach to that.
+✅ Logs success/failure/output of each step
 
----
+🧪 Is fully testable (unit + integration)
 
-## 🧱 Technologies Used
+That’s it. No database, no web server, no rocket math. Just clean execution logic, clear outputs, and some nice structure.
 
-- `petgraph` for the DAG
-- `sqlx` (or `rusqlite`) for persistence
-- `serde_yaml` to describe flows
-- `tracing` for logs and spans
-- `tokio` for async task execution
-- `ulid` for unique IDs
-- MCP (Model Context Protocol) for tool exposure
 
----
+⏱️ Time Required
 
-## 🧪 What’s Next
+1–2 focused evenings should be enough to complete the core assignment.
 
-- Try running the demo: `cargo run -- run-flow flows/quick_catalog_check.yml`
-- Schedule a task: `cargo run -- schedule flows/quick_catalog_check.yml "2025-09-20T04:00:00Z"`
-- View the run history
-- Or plug it into **Claude Desktop** via MCP and ask it to "run the quick catalog check flow"
+You have 7 days from the day of reception to submit your solution.
 
----
+Feel free to overachieve — but we care more about clarity, reasoning, and testability than about features.
 
-## ❤️ Why It Matters
 
-Real-world agents need more than clever prompts.  
-They need **durability**, **accountability**, and **the ability to recover gracefully**.
+💡 Bonus (optional)
 
-This repo is my take on that.
+If you’re in the mood to show off:
 
-Hope you enjoy it,  
-Angelos
+Add retry policies (max_attempts, backoff_seconds)
+
+Add support for compensation steps (sagas-style rollback)
+
+Add a CLI (cargo run -- run-flow file.yml)
+
+Export RunHistory to .json or .yaml
+
+Replace "noop" with a real handler (e.g. shell command or HTTP GET)
+
+But again: simple and correct wins over complex and buggy.
+
+
+✅ What We're Looking For
+
+Clear structure
+
+Working DAG traversal
+
+Step-level isolation and traceability
+
+Tests that are not just there, but useful
+
+Bonus: tasteful comments, naming, and edge-case handling
+
