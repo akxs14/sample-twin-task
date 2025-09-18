@@ -57,17 +57,17 @@ Feel free to overachieve — but we care more about clarity, reasoning, and test
 
 If you’re in the mood to show off:
 
-Add retry policies (max_attempts, backoff_seconds)
+- Add retry policies (max_attempts, backoff_seconds)
 
-Add support for compensation steps (sagas-style rollback)
+- Add support for compensation steps (sagas-style rollback)
 
-Add a CLI (cargo run -- run-flow file.yml)
+- Add a CLI (cargo run -- run-flow file.yml)
 
-Export RunHistory to .json or .yaml
+- Export RunHistory to .json or .yaml
 
-Replace "noop" with a real handler (e.g. shell command or HTTP GET)
+- Replace "noop" with a real handler (e.g. shell command or HTTP GET)
 
-But again: simple and correct wins over complex and buggy.
+*But again*: simple and correct wins over complex and buggy.
 
 
 ✅ What We're Looking For
