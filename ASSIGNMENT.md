@@ -46,11 +46,11 @@ That’s it. No database, no web server, no rocket math. Just clean execution lo
 
 ⏱️ Time Required
 
-1–2 focused evenings should be enough to complete the core assignment.
+- 1–2 focused evenings should be enough to complete the core assignment.
 
-You have 7 days from the day of reception to submit your solution.
+- You have 7 days from the day of reception to submit your solution.
 
-Feel free to overachieve — but we care more about clarity, reasoning, and testability than about features.
+- *Feel free to overachieve* — but we care more about clarity, reasoning, and testability than about features.
 
 
 💡 Bonus (optional)
@@ -72,13 +72,13 @@ If you’re in the mood to show off:
 
 ✅ What We're Looking For
 
-Clear structure
+- Clear structure
 
-Working DAG traversal
+- Working DAG traversal
 
-Step-level isolation and traceability
+- Step-level isolation and traceability
 
-Tests that are not just there, but useful
+- Tests that are not just there, but useful
 
-Bonus: tasteful comments, naming, and edge-case handling
+- Bonus: tasteful comments, naming, and edge-case handling
 
