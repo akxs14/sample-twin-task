@@ -1,0 +1,48 @@
+id: quick_catalog_check
+description: "Login → Fetch → Parse → Verify → Store"
+
+nodes:
+  - id: login
+    kind: http_login
+    config:
+      url: "https://api.example.com/auth"
+      username: "{{inputs.username}}"
+      password: "{{inputs.password}}"
+    retry:
+      max_attempts: 3
+      backoff_seconds: 5
+    idempotency_key: "login:{{inputs.client_id}}"
+
+  - id: fetch
+    kind: http_get
+    depends_on: [login]
+    config:
+      url: "https://api.example.com/catalog"
+      auth: "{{steps.login.token}}"
+    retry:
+      max_attempts: 5
+      backoff_seconds: 2
+    idempotency_key: "fetch:catalog:{{workflow_run.id}}"
+
+  - id: parse
+    kind: parse_json
+    depends_on: [fetch]
+    config:
+      schema: "product-list-v1"
+
+  - id: verify
+    kind: validation
+    depends_on: [parse]
+    config:
+      ruleset: "catalog-freshness"
+
+  - id: store
+    kind: db_upsert
+    depends_on: [verify]
+    config:
+      table: "products"
+    compensation:
+      kind: db_delete
+      config:
+        table: "products"
+        key: "{{steps.store.inserted_key}}"
